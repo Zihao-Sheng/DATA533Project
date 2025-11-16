@@ -116,3 +116,20 @@
 
 ```python
 BudgetSystem(members, current_fund, address, household_name='')
+## BudgetSystem — Methods Overview
+```
+
+| 方法名 | 参数 | 功能说明 |
+|--------|------|-----------|
+| `__init__(members, current_fund, address, household_name='')` | 成员列表、初始基金、地址、家庭名称 | 初始化整个系统，创建基金对象、存储成员与家庭信息 |
+| `add_member(new_member)` | 成员对象 | 添加一个成员（guardian 或 dependant） |
+| `remove_member(ID)` | 成员 ID | 按 ID 删除成员，成功返回 True，未找到返回 False |
+| `list_member()` | 无 | 打印所有成员信息（调用成员的 `__str__()`） |
+| `get_member(ID)` | 成员 ID | 返回对应的成员对象，若不存在返回 None |
+| `__str__()` | 无 | 返回 BudgetSystem 的总体信息（家庭名称、地址、人数、基金余额） |
+| `print_fund_log()` | 无 | 打印全部基金日志记录 |
+| `search_fund_log(keyword)` | 关键字字符串 | 搜索日志中 description 字段包含关键字的记录 |
+| `filter_fund_status(status)` | True / False | 筛选成功（True）或失败（False）的日志记录 |
+| `add_fund(amount, description='')` | 金额、描述 | 增加基金余额并写入日志 |
+| `sub_fund(amount, description='')` | 金额、描述 | 减少基金余额，不足则记录失败 |
+| `validate_fund(amount=0)` | 金额 | 检查基金余额是否 ≥ amount，返回布尔值 |
