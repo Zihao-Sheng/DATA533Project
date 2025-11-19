@@ -26,7 +26,7 @@ Coordinates all submodules and provides a unified interface.
 ## 3. Subpackage 2: `member`
 
 ### Features
-- Base member class: name, DOB, ID  
+- Base `member` class: name, DOB, ID  
 - `dependant`: inherits member and adds type  
 - `guardian`: adds type, job, and income  
 
