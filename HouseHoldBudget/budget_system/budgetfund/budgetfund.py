@@ -18,14 +18,14 @@ class budgetfund: #this is the class for the whole budget of the family
         
     def add(self,amount,desciption='',date=None):
         if date is None:
-        date = datetime.today().strftime("%Y-%m-%d")
-        self.__balance+=float(amount)
+            date = datetime.today().strftime("%Y-%m-%d")
+            self.__balance+=float(amount)
         self.__log.append(['add',amount,desciption,self.get(),'succeeded',date])
         return True
         
     def sub(self,amount,desciption='',date=None):
         if date is None:
-        date = datetime.today().strftime("%Y-%m-%d")    
+            date = datetime.today().strftime("%Y-%m-%d")    
         if self.validate(amount):
             self.__balance-=float(amount)
             self.__log.append(['sub',amount,desciption,self.get(),'succeeded',date])
