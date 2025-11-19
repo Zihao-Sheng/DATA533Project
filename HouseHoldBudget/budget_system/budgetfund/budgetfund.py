@@ -74,7 +74,7 @@ class budgetfund: #this is the class for the whole budget of the family
 
         labels = ["Opening", "Income", "Expense", "Closing"]
         values = [opening_balance, income, expense, closing_balance]
-       plt.figure(figsize=(14, 6))
+        plt.figure(figsize=(14, 6))
 
         plt.subplot(1, 2, 1)
         plt.bar(labels, values)
