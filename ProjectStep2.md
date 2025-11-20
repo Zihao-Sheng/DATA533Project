@@ -37,7 +37,7 @@ Coordinates all submodules and provides a unified interface.
 - Store basic info and values
 - Category-specific extensions
 
-Functions：
+### Functions：
 - Add, edit, or delete assets
 - Update asset values
 - Filter by category or owner
