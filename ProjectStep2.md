@@ -31,3 +31,13 @@ Coordinates all submodules and provides a unified interface.
 - `guardian`: adds type, job, and income  
 
 ## 4. Subpackage 3: `property`
+
+### Features：
+- Manage assets: real estate, vehicles, investments
+- Store basic info and values
+- Category-specific extensions
+Functions：
+- Add, edit, or delete assets
+- Update asset values
+- Filter by category or owner
+- Export records and generate summaries
