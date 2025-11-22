@@ -6,3 +6,4 @@
 Adjust budget_system.budget_system里面 add_member function，防止记录存在时依然append
 11/22 Rachel
 11/22 上午12:06 check
+11/22 上午12:07 check
