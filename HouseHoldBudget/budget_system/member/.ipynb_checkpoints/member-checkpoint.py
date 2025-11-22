@@ -1,5 +1,5 @@
 class member:
-    def __init__(self,name,DOB,ID):
+    def __init__(self,name,ID,DOB):
         self.name=name
         self.DOB=DOB
         self.ID=ID
