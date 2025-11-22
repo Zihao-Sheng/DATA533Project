@@ -3,3 +3,5 @@
 11/21 check
 那我们还需要整那些其他的log么，PS我们是减轻教授审批的负担
 11/22 Rachel
+Adjust budget_system.budget_system里面 add_member function，防止记录存在时依然append
+11/22 Rachel
