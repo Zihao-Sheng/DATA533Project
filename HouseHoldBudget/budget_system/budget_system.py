@@ -18,8 +18,10 @@ class BudgetSystem:
     def add_member(self,new_member):
         if any(m.ID == new_member.ID for m in self.members):
             print(f"Warning: member with ID {new_member.ID} already exists.")
+            return False
         self.members.append(new_member)
-        
+        return True
+
     def remove_member(self, ID):
         for person in self.members:
             if person.ID == ID:
@@ -37,7 +39,7 @@ class BudgetSystem:
     def get_member(self, ID):
         for person in self.members:
             if person.ID == ID:
-                return person
+                return person.
         return None
         
     def __str__(self):
