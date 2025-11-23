@@ -11,3 +11,5 @@ Adjust budget_system.budget_system里面 add_member function，防止记录存�
 11/23 上午9:38 check
 
 11/23 check
+
+12345
