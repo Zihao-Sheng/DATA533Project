@@ -21,7 +21,7 @@ class BudgetSystem:
             return False
         self.members.append(new_member)
         return True
-        
+
     def remove_member(self, ID):
         for person in self.members:
             if person.ID == ID:
@@ -39,7 +39,7 @@ class BudgetSystem:
     def get_member(self, ID):
         for person in self.members:
             if person.ID == ID:
-                return person
+                return person.
         return None
 
     def upgrade_member(self, ID):
