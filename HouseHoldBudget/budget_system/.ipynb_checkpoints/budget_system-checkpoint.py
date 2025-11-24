@@ -1,5 +1,5 @@
 from .budgetfund import budgetfund, fund_utils
-from .member.member_type import guardian, dependant
+from .member.member_type import guardian, dependant, member_edit
 from IPython.display import clear_output
 import time
 
@@ -18,7 +18,9 @@ class BudgetSystem:
     def add_member(self,new_member):
         if any(m.ID == new_member.ID for m in self.members):
             print(f"Warning: member with ID {new_member.ID} already exists.")
+            return False
         self.members.append(new_member)
+        return True
         
     def remove_member(self, ID):
         for person in self.members:
@@ -39,7 +41,23 @@ class BudgetSystem:
             if person.ID == ID:
                 return person
         return None
-        
+
+    def upgrade_member(self, ID):
+        person=self.get_member(ID)
+        if person==None:
+            print('No member found')
+            return False
+        elif person.type=='guardian':
+            print('member already a guardian')
+            return False
+        else:
+            job=input('Please enter the job title for the member:')
+            income=float(input('Please enter the income for the member:'))
+            self.remove_member(ID)
+            new_person=guardian(person.name,person.ID,person.DOB,job,income)
+            self.add_member(new_person)
+            return True
+
     def __str__(self):
         return (f"Budget System for {self.household_name}\n"
                 f"Address: {self.address}\n"
@@ -126,7 +144,7 @@ def main_menu(system):
         elif choice == "3":
             log_viewer(system)
         elif choice == "4":
-            property_manager(system)      # ← 你缺少这个入口，我补上了
+            property_manager(system)
         elif choice == "5":
             clear_screen()
             print("Thank you for using the system. Goodbye!")
@@ -149,14 +167,16 @@ def member_editor(system):
         else:
             for m in system.members:
                 print("  " + str(m))
+
         print("\nOptions:")
         print("1. List members")
         print("2. Add member")
         print("3. Delete member")
-        print("4. Find member by ID")
-        print("5. Back to main menu")
+        print("4. Upgrade member (dependant → guardian)")
+        print("5. Edit member by ID")
+        print("6. Back to main menu")
         print("------------------------------")
-        choice = input("Choose an option (1-5): ").strip()
+        choice = input("Choose an option (1-6): ").strip()
 
         if choice == "1":
             print("=== Member List ===")
@@ -170,17 +190,16 @@ def member_editor(system):
             name = input("Name: ")
             dob = input("Date of birth (YYYY-MM-DD): ")
             ID = input("Unique ID: ")
-            mtype = input("Type (guardian/dependant): ")
+            mtype = input("Type (guardian/dependant): ").strip().lower()
 
-            if mtype.lower() == "guardian":
-                job = input('Job Title:')
-                income = float(input('income:'))
-                new_member = guardian(name,ID,dob,income,job)
+            if mtype == "guardian":
+                job = input('Job Title: ')
+                income = float(input('Income: '))
+                new_member = guardian(name, ID, dob, job, income)
             else:
                 new_member = dependant(name, ID, dob)
 
             system.add_member(new_member)
-
             print("\nMember successfully added.")
             input("Press Enter to return...")
 
@@ -196,20 +215,29 @@ def member_editor(system):
             input("\nPress Enter to return...")
 
         elif choice == "4":
-            print("=== Find Member by ID ===")
+            print("=== Upgrade Member (dependant → guardian) ===")
+            time.sleep(0.05)
+            ID = input("Enter ID to upgrade: ").strip()
+            if system.upgrade_member(ID):
+                print(f"Member with ID {ID} has been upgraded to guardian.")
+            else:
+                print("Upgrade failed")
+            input("\nPress Enter to return...")
+
+        elif choice == "5":
+            print("=== Edit Member by ID ===")
             time.sleep(0.05)
             ID = input("Enter ID: ").strip()
 
             person = system.get_member(ID)
             if person:
-                print("\nFound member:")
-                print(person)
+                member_edit(person)
             else:
                 print("\nNo member found with that ID.")
 
             input("\nPress Enter to return...")
 
-        elif choice == "5":
+        elif choice == "6":
             break
 
         else:
