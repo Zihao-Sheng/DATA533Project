@@ -39,3 +39,5 @@ Adjust budget_system.budget_system里面 add_member function，防止记录存�
 
 11/26 上午11:32 check
 
+
+11/28 晚上
