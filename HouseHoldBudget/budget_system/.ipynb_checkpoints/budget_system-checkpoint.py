@@ -1,41 +1,45 @@
 from .budgetfund import budgetfund, fund_utils
 from .member.member_type import guardian, dependant, member_edit
+from .property.asset import Asset, PropertyRegistry
+from .property.asset_utils import summarize_total_value, search_assets, get_visualization_data
 from IPython.display import clear_output
 import time
-
-def clear_screen():
-    clear_output(wait=False)
+from datetime import datetime
 
 class BudgetSystem:
-    def __init__(self, members, current_fund, address, household_name=''): #please enter member as a list of dependant and guardian
-        self.fund=budgetfund(current_fund,household_name)
-        self.address=address
-        self.household_name=household_name
-        self.members=members
-        #self.incomes=income
-        #self.expenses=espenses
-        
-    def add_member(self,new_member):
+    def __init__(self, current_fund, address, household_name='', members=None):
+        # please enter member as a list of dependant and guardian
+        self.fund = budgetfund(current_fund, household_name)
+        self.address = address
+        self.household_name = household_name
+        if members==None:
+            self.members=[]
+        else:
+            self.members = members
+        self.property_registry = PropertyRegistry()
+
+    # -------- member methods --------
+    def add_member(self, new_member):
         if any(m.ID == new_member.ID for m in self.members):
             print(f"Warning: member with ID {new_member.ID} already exists.")
             return False
         self.members.append(new_member)
         return True
-        
+
     def remove_member(self, ID):
         for person in self.members:
             if person.ID == ID:
                 self.members.remove(person)
                 return True
         return False
-        
+
     def list_member(self):
         if not self.members:
             print("No members in the system.")
             return
         for person in self.members:
             print(person)
-            
+
     def get_member(self, ID):
         for person in self.members:
             if person.ID == ID:
@@ -43,18 +47,18 @@ class BudgetSystem:
         return None
 
     def upgrade_member(self, ID):
-        person=self.get_member(ID)
-        if person==None:
+        person = self.get_member(ID)
+        if person is None:
             print('No member found')
             return False
-        elif person.type=='guardian':
-            print('member already a guardian')
+        elif person.type == 'guardian':
+            print('Member already a guardian')
             return False
         else:
-            job=input('Please enter the job title for the member:')
-            income=float(input('Please enter the income for the member:'))
+            job = input('Please enter the job title for the member: ')
+            income = float(input('Please enter the income for the member: '))
             self.remove_member(ID)
-            new_person=guardian(person.name,person.ID,person.DOB,job,income)
+            new_person = guardian(person.name, person.ID, person.DOB, job, income)
             self.add_member(new_person)
             return True
 
@@ -63,9 +67,10 @@ class BudgetSystem:
                 f"Address: {self.address}\n"
                 f"Members: {len(self.members)}\n"
                 f"Current Fund: {self.fund.get()}")
-        
-    def print_fund_log(self,start,end):
-        return fund_utils.print_log(self.fund,start,end)
+
+    # -------- fund methods --------
+    def print_fund_log(self, start, end):
+        return fund_utils.print_log(self.fund, start, end)
 
     def search_fund_log(self, keyword=''):
         return fund_utils.search_log(self.fund, keyword)
@@ -78,32 +83,73 @@ class BudgetSystem:
 
     def sub_fund(self, amount, description='', date=None):
         return self.fund.sub(amount, description, date)
-        
-    def visualize(self,year_month):
+
+    def visualize(self, year_month):
         return self.fund.summarize_month(year_month)
 
     def validate_fund(self, amount=0):
         return self.fund.validate(amount)
 
-    def visualize(self,year_month):
-        return self.fund.summarize_month(year_month)
+    def summarize_month(self, start_month, end_month=''):
+        if end_month == '':
+            return self.fund.summarize_month(start_month, start_month)
+        return self.fund.summarize_month(start_month, end_month)
 
-    def validate_fund(self, amount=0):
-        return self.fund.validate(amount)
+    def get_df(self, start=None, end=None):
+        return self.fund.get_df(start, end)
 
-    def visualize(self,year_month):
-        return self.fund.summarize_month(year_month)
+    # -------- property / asset methods --------
+    def add_asset_for_member(self, member_id, name, asset_type, current_value, date_acquired=None):
+        """Create an asset for a given member ID and add it to the registry."""
+        member = self.get_member(member_id)
+        if member is None:
+            print(f"No member found with ID {member_id}. Cannot add asset.")
+            return None
 
-    def validate_fund(self, amount=0):
-        return self.fund.validate(amount)
+        try:
+            asset = Asset(
+                name=name,
+                asset_type=asset_type,
+                current_value=current_value,
+                owner=member_id,          # store owner as member ID
+                date_acquired=date_acquired
+            )
+        except ValueError as e:
+            print(f"Failed to create asset: {e}")
+            return None
 
-    def summarize_month(self, start_month,end_month=''):
-        if end_month=='':
-            return self.fund.summarize_month(start_month,start_month)
-        return self.fund.summarize_month(start_month,end_month)
+        self.property_registry.add_asset(asset)
+        return asset
 
-    def get_df(self,start=None,end=None):
-        return self.fund.get_df(start,end)
+    def list_assets(self):
+        """Print all assets in the registry."""
+        if len(self.property_registry) == 0:
+            print("No assets in the system.")
+            return
+        for asset in self.property_registry:
+            print(asset)
+
+    def delete_asset(self, asset_id):
+        """Delete an asset by ID."""
+        return self.property_registry.delete_asset(asset_id)
+
+    def update_asset_value(self, asset_id, new_value):
+        """Update only the value of an asset."""
+        return self.property_registry.update_asset_value(asset_id, new_value)
+
+    def summarize_assets(self):
+        """Return summary info: total value and summary table."""
+        return summarize_total_value(self.property_registry)
+
+    def search_assets(self, keyword):
+        """Search assets by keyword."""
+        return search_assets(self.property_registry, keyword)
+
+    def get_asset_visualization_data(self, group_by="Type"):
+        """Return aggregated data for charts."""
+        return get_visualization_data(self.property_registry, group_by=group_by)
+
+
 
 def initialization(system=None):
     if system==None:
@@ -122,6 +168,9 @@ def initialization(system=None):
     else:
         main_menu(system)
     return system
+
+def clear_screen():
+    clear_output(wait=False)
 
 def main_menu(system):
     while True:
@@ -144,7 +193,7 @@ def main_menu(system):
         elif choice == "3":
             log_viewer(system)
         elif choice == "4":
-            property_manager(system)
+            property_editor(system)
         elif choice == "5":
             clear_screen()
             print("Thank you for using the system. Goodbye!")
@@ -347,6 +396,320 @@ def log_viewer(system):
             system.summarize_month(start, end)
             input("\nPress Enter to return...")
 
+        elif choice == "5":
+            break
+
+        else:
+            print("Invalid choice.")
+            input("Press Enter to try again...")
+
+def property_editor(system):
+    """
+    CLI editor for assets using BudgetSystem methods.
+    """
+    registry = system.property_registry
+
+    def choose_owner_id() -> str:
+        """Pick owner (member ID) by number."""
+        if not system.members:
+            print("No members in the system. Please add members first.")
+            input("Press Enter to return...")
+            return ""
+
+        print("Current members:")
+        system.list_member()  # reuse existing method
+        print("\nSelect owner:")
+        for i, m in enumerate(system.members, start=1):
+            print(f"{i}. {m.name} (ID: {m.ID})")
+
+        while True:
+            choice = input("Choose owner by number: ").strip()
+            if not choice.isdigit():
+                print("Please enter a number.")
+                continue
+            idx = int(choice)
+            if 1 <= idx <= len(system.members):
+                return system.members[idx - 1].ID
+            else:
+                print("Invalid choice. Try again.")
+
+def property_editor(system):
+    """
+    CLI editor for assets using BudgetSystem methods.
+    """
+    registry = system.property_registry
+
+    def choose_owner_id() -> str:
+        """Pick owner (member ID) by number."""
+        if not system.members:
+            print("No members in the system. Please add members first.")
+            input("Press Enter to return...")
+            return ""
+
+        print("Current members:")
+        system.list_member()
+        print("\nSelect owner:")
+        for i, m in enumerate(system.members, start=1):
+            print(f"{i}. {m.name} (ID: {m.ID})")
+
+        while True:
+            choice = input("Choose owner by number: ").strip()
+            if not choice.isdigit():
+                print("Please enter a number.")
+                continue
+            idx = int(choice)
+            if 1 <= idx <= len(system.members):
+                return system.members[idx - 1].ID
+            else:
+                print("Invalid choice. Try again.")
+
+    def choose_asset_type() -> str:
+        """Pick asset type."""
+        print("Available asset types:")
+        for i, t in enumerate(Asset.ASSET_TYPES, start=1):
+            print(f"{i}. {t}")
+        while True:
+            choice = input("Choose type by number: ").strip()
+            if not choice.isdigit():
+                print("Please enter a number.")
+                continue
+            idx = int(choice)
+            if 1 <= idx <= len(Asset.ASSET_TYPES):
+                return Asset.ASSET_TYPES[idx - 1]
+            else:
+                print("Invalid choice. Try again.")
+
+    def print_asset_table():
+        """Show a brief asset list at top of menu."""
+        if len(registry) == 0:
+            print("(No assets yet.)")
+            return
+        df = registry.to_dataframe()
+        cols = ["Asset ID", "Name", "Type", "Owner", "Value_Display"]
+        cols = [c for c in cols if c in df.columns]
+        print(df[cols].to_string(index=False))
+
+    while True:
+        clear_screen()
+        time.sleep(0.05)
+        print("=== Property / Asset Editor ===")
+        print(f"Household: {system.household_name}")
+        print(f"Total assets: {len(registry)}")
+        print("------------------------------")
+        print_asset_table()
+        print("------------------------------")
+        print("1. Add new asset")
+        print("2. Edit existing asset")
+        print("3. Delete asset")
+        print("4. Reports & analysis")
+        print("5. Back to main menu")
+        print("------------------------------")
+        choice = input("Choose an option (1-5): ").strip()
+
+        # 1. add
+        if choice == "1":
+            clear_screen()
+            print("=== Add New Asset ===")
+            time.sleep(0.05)
+
+            name = input("Asset name: ").strip()
+            if not name:
+                print("Name cannot be empty.")
+                input("Press Enter to return...")
+                continue
+
+            value_str = input("Current value: ").strip()
+            try:
+                current_value = float(value_str)
+            except ValueError:
+                print("Invalid value.")
+                input("Press Enter to return...")
+                continue
+
+            asset_type = choose_asset_type()
+            owner_id = choose_owner_id()
+            if not owner_id:
+                continue
+
+            date_str = input("Date acquired (YYYY-MM-DD, blank for today): ").strip()
+            date_acquired = date_str or None
+
+            system.add_asset_for_member(
+                member_id=owner_id,
+                name=name,
+                asset_type=asset_type,
+                current_value=current_value,
+                date_acquired=date_acquired,
+            )
+            input("Press Enter to return...")
+
+        # 2. edit
+        elif choice == "2":
+            clear_screen()
+            print("=== Edit Asset ===")
+            time.sleep(0.05)
+
+            asset_id = input("Enter Asset ID to edit: ").strip()
+            asset = registry._find_asset(asset_id)
+            if asset is None:
+                print(f"No asset found with ID {asset_id}.")
+                input("Press Enter to return...")
+                continue
+
+            while True:
+                clear_screen()
+                print("=== Edit Asset ===")
+                print(asset)
+                print("------------------------------")
+                print("1. Edit name")
+                print("2. Edit current value")
+                print("3. Edit type")
+                print("4. Edit owner")
+                print("5. Back")
+                print("------------------------------")
+                sub_choice = input("Choose an option (1-5): ").strip()
+
+                if sub_choice == "1":
+                    new_name = input("New name: ").strip()
+                    if new_name:
+                        asset.name = new_name
+                        asset.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        print("Name updated.")
+                    else:
+                        print("Name not changed.")
+                    input("Press Enter to continue...")
+
+                elif sub_choice == "2":
+                    val_str = input("New value: ").strip()
+                    try:
+                        new_val = float(val_str)
+                        system.update_asset_value(asset_id, new_val)
+                    except ValueError:
+                        print("Invalid number. Value not changed.")
+                    input("Press Enter to continue...")
+
+                elif sub_choice == "3":
+                    new_type = choose_asset_type()
+                    asset.asset_type = new_type
+                    asset.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    print("Type updated.")
+                    input("Press Enter to continue...")
+
+                elif sub_choice == "4":
+                    new_owner_id = choose_owner_id()
+                    if new_owner_id:
+                        asset.owner = new_owner_id
+                        asset.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        print("Owner updated.")
+                    else:
+                        print("Owner not changed.")
+                    input("Press Enter to continue...")
+
+                elif sub_choice == "5":
+                    break
+
+                else:
+                    print("Invalid choice.")
+                    input("Press Enter to continue...")
+
+        # 3. delete
+        elif choice == "3":
+            clear_screen()
+            print("=== Delete Asset ===")
+            time.sleep(0.05)
+            asset_id = input("Enter Asset ID to delete: ").strip()
+            confirm = input(f"Are you sure to delete {asset_id}? (y/N): ").strip().lower()
+            if confirm == "y":
+                system.delete_asset(asset_id)
+            else:
+                print("Cancelled.")
+            input("Press Enter to return...")
+
+        # 4. reports & analysis (list + summary + search + visualization)
+        elif choice == "4":
+            while True:
+                clear_screen()
+                print("=== Asset Reports & Analysis ===")
+                time.sleep(0.05)
+                print("1. List all assets")
+                print("2. Asset summary")
+                print("3. Search assets")
+                print("4. Visualization data")
+                print("5. Back")
+                print("------------------------------")
+                sub = input("Choose an option (1-5): ").strip()
+
+                # 1. list all assets
+                if sub == "1":
+                    clear_screen()
+                    print("=== Asset List ===")
+                    time.sleep(0.05)
+                    system.list_assets()
+                    input("\nPress Enter to return...")
+
+                # 2. summary
+                elif sub == "2":
+                    clear_screen()
+                    print("=== Asset Summary ===")
+                    time.sleep(0.05)
+                    summary = system.summarize_assets()
+                    total = summary.get("Total Value", 0.0)
+                    table = summary.get("Summary Table")
+
+                    print(f"Total asset value: ${total:,.2f}")
+                    print("\nSummary by Type and Owner:")
+                    if table is not None and not table.empty:
+                        print(table.to_string(index=False))
+                    else:
+                        print("No data.")
+                    input("\nPress Enter to return...")
+
+                # 3. search
+                elif sub == "3":
+                    clear_screen()
+                    print("=== Search Assets ===")
+                    time.sleep(0.05)
+                    keyword = input("Enter keyword (ID / name / type / owner): ").strip()
+                    df = system.search_assets(keyword)
+                    if df is not None and not df.empty:
+                        print(df.to_string(index=False))
+                    else:
+                        print("No matching assets found.")
+                    input("\nPress Enter to return...")
+
+                # 4. visualization
+                elif sub == "4":
+                    clear_screen()
+                    print("=== Asset Visualization Data ===")
+                    time.sleep(0.05)
+                    print("Group by:")
+                    print("1. Type")
+                    print("2. Owner")
+                    gb_choice = input("Choose (1/2): ").strip()
+                    if gb_choice == "1":
+                        group_by = "Type"
+                    elif gb_choice == "2":
+                        group_by = "Owner"
+                    else:
+                        print("Invalid choice.")
+                        input("Press Enter to return...")
+                        continue
+
+                    df = system.get_asset_visualization_data(group_by=group_by)
+                    if df is not None and not df.empty:
+                        print(df.to_string(index=False))
+                    else:
+                        print("No data available.")
+                    input("\nPress Enter to return...")
+
+                elif sub == "5":
+                    break
+
+                else:
+                    print("Invalid choice.")
+                    input("Press Enter to try again...")
+
+        # 5. back
         elif choice == "5":
             break
 

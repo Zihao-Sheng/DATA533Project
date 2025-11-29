@@ -40,6 +40,9 @@ class budgetfund: #this is the class for the whole budget of the family
         return [self.log_title,self.__log]
         
     def get_df(self,start=None, end=None):
+        if not self.__log:
+            return pd.DataFrame(columns=self.log_title + ["year_month"])
+    
         df = pd.DataFrame([
             {key: entry[i] for i, key in enumerate(self.log_title)}
             for entry in self.__log
