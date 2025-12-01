@@ -1,157 +1,139 @@
-# Household Budget System – Package Documentation
-
-This Python package provides a complete household financial management system, designed using object-oriented structures and modular sub-packages.  
-It includes functionality for managing household members, budget funds, and assets/properties, combined with optional CLI menus for interaction.
-
----
-
-# 📦 Package Overview
-
-The package contains **three sub-packages**:
-
-1. **`budgetfund`**  
-   Handles all income/expense logs, balance updates, summaries, and visualizations.
-
-2. **`member`**  
-   Defines all household members (guardian, dependant), including editable attributes.
-
-3. **`property`**  
-   Manages household assets such as real estate, vehicles, and investments.
-
-The main controller class is `BudgetSystem`, which ties all subcomponents together.
-
----
-
-# 📘 Available Classes, Methods, and Functions
-
-Below is a complete list of the important public methods and functions available in this package.
-
----
-
 # 🧾 1. Subpackage: `member`
 
-## ## Base Class: `member`
-| Method | Description |
-|--------|-------------|
-| `__init__(name, ID, DOB)` | Create a basic member. |
-| `new_name(name)` | Update member name. |
-| `new_DOB(DOB)` | Update date of birth. |
-| `new_ID(ID)` | Update member ID. |
-| `get_age()` | Return member age based on DOB. |
+This subpackage defines household members using inheritance.  
+It consists of **two modules**, each containing classes and methods.
 
 ---
 
-## ## Class: `dependant(member)`
+# 📄 Module 1: `member.py` — Base Member Class
+
+### Class: `member`
+
 | Method | Description |
 |--------|-------------|
-| `__init__(...)` | Create a dependant member. |
+| `__init__(name, ID, DOB)` | Create a basic member with name, unique ID, and date of birth. |
+| `new_name(name)` | Modify member name. |
+| `new_DOB(DOB)` | Modify member date of birth. |
+| `new_ID(ID)` | Modify member ID. |
+| `get_age()` | Compute age in years from DOB. |
+
+This is the **parent class** for all member types.
+
+---
+
+# 📄 Module 2: `member_type.py` — Member Types & Editor
+
+### Class: `dependant(member)`
+| Method | Description |
+|--------|-------------|
+| `__init__(...)` | Create a dependant (child or non-working member). |
+| `__str__()` | Human-readable dependant information. |
 | *(inherits all methods from `member`)* | — |
-| `__str__()` | Pretty-print dependant information. |
 
 ---
 
-## ## Class: `guardian(member)`
+### Class: `guardian(member)`
 | Method | Description |
 |--------|-------------|
-| `__init__(..., income, job_title='')` | Create a guardian with job + income. |
-| `new_job(job_title)` | Update job title (also used when upgrading). |
-| `new_income(income)` | Update income. |
-| `get_income()` | Return guardian income. |
-| `__str__()` | Pretty-print guardian information. |
+| `__init__(..., income, job_title='')` | Create a guardian with job and income. |
+| `new_job(job_title)` | Update job title. |
+| `new_income(income)` | Update income amount. |
+| `get_income()` | Return income. |
+| `__str__()` | Human-readable guardian profile. |
 
 ---
 
-## ## Function: `member_edit(member_obj)`
-Interactive CLI editor for modifying member properties.  
-Depending on the member type:
-
-### Dependant Options
-- Edit name  
-- Edit DOB  
-- Exit  
-
-### Guardian Options
-- Edit name  
-- Edit DOB  
-- Edit job (also changes income)  
-- Edit income  
-- Exit  
+### Function: `member_edit(member_obj)`
+Interactive CLI editor that allows:
+- (For dependants) edit name or DOB  
+- (For guardians) edit name, DOB, job, income  
+Uses polymorphism based on member type.
 
 ---
 
 # 💰 2. Subpackage: `budgetfund`
 
-## ## Class: `budgetfund`
-| Method | Description |
-|--------|-------------|
-| `__init__(opening_balance, name='')` | Create a fund account. |
-| `validate(amount=0)` | Check if balance is sufficient. |
-| `add(amount, description='', date=None)` | Add income; logs success. |
-| `sub(amount, description='', date=None)` | Subtract expense; logs success/failed status. |
-| `get()` | Return current balance. |
-| `get_log()` | Return raw log list. |
-| `get_df(start=None, end=None)` | Return logs as DataFrame (with year-month). |
-| `summarize_month(start, end='')` | Create monthly bar chart & pie chart summary. |
-| `__str__()` | Summary of current fund state. |
+Handles all financial activity: income, expenses, logs, summaries, and visualizations.  
+Contains **two modules**.
 
 ---
 
-## ## Module: `fund_utils`
+# 📄 Module 1: `budgetfund.py` — Fund Class
 
-### `print_log(budgetfund, start, end)`
-Display logs in a styled table (green = success, red = failed).
+### Class: `budgetfund`
 
-### `search_log(budgetfund, keyword='')`
-Search in description field (case-insensitive).
+| Method | Description |
+|--------|-------------|
+| `__init__(opening_balance, name='')` | Initialize fund account with balance. |
+| `validate(amount=0)` | Check if balance is sufficient. |
+| `add(amount, description='', date=None)` | Add income and log success. |
+| `sub(amount, description='', date=None)` | Subtract expense; success/fail logged. |
+| `get()` | Return current balance. |
+| `get_log()` | Return internal log list. |
+| `get_df(start=None, end=None)` | Log as DataFrame with filtering. |
+| `summarize_month(start, end='')` | Monthly financial summary (bar + pie chart). |
+| `__str__()` | Summary description of fund account. |
 
-### `filter_status(budgetfund, status=True)`
-Filter only succeeded (`True`) or failed (`False`) logs.
+---
+
+# 📄 Module 2: `fund_utils.py` — Log Formatting & Searching
+
+### Function: `print_log(budgetfund, start, end)`
+Return and display logs in a color-formatted table.
+
+### Function: `search_log(budgetfund, keyword)`
+Case-insensitive search in description field.
+
+### Function: `filter_status(budgetfund, status=True)`
+Return only succeeded or failed transaction records.
 
 ---
 
 # 🏡 3. Subpackage: `property`
 
-## ## Class: `Asset`
-| Method | Description |
-|--------|-------------|
-| `__init__(name, asset_type, owner, current_value, date_acquired)` | Create an asset with auto ID. |
-| `_generate_id(asset_type)` | Internal auto-ID generator (A001R, A002V, etc). |
-| `update_value(new_value)` | Change asset value (auto-updates timestamp). |
-| `to_dict()` | Return dict representation for DataFrame. |
-| `__str__()` | Human-readable asset format. |
+Manages all household assets such as houses, cars, and investments.  
+Includes **two modules**.
 
 ---
 
-## ## Class: `PropertyRegistry`
+# 📄 Module 1: `asset.py` — Asset & Registry Classes
+
+### Class: `Asset`
+
 | Method | Description |
 |--------|-------------|
-| `add_asset(asset)` | Add new asset object. |
+| `__init__(name, asset_type, owner, current_value, date_acquired)` | Create an asset with auto ID and validation. |
+| `_generate_id(asset_type)` | Internal ID generator (A001R, etc.). |
+| `update_value(new_value)` | Update asset value (auto timestamp). |
+| `to_dict()` | Convert to record for DataFrame. |
+| `__str__()` | Human-readable asset summary. |
+
+---
+
+### Class: `PropertyRegistry`
+
+| Method | Description |
+|--------|-------------|
+| `add_asset(asset)` | Add an asset to registry. |
 | `delete_asset(asset_id)` | Remove asset by ID. |
-| `update_asset_value(asset_id, new_value)` | Update value of an existing asset. |
+| `update_asset_value(asset_id, new_value)` | Update an existing asset’s value. |
 | `get_asset(asset_id)` | Return asset object. |
-| `to_dataframe()` | Convert all assets to DataFrame with formatted currency. |
-| `filter_assets(asset_type=None, owner=None)` | Filter asset list by type or owner. |
-| `__iter__()` | Allow iteration over stored assets. |
+| `to_dataframe()` | Convert all assets to a DataFrame. |
+| `filter_assets(asset_type=None, owner=None)` | Filter assets by type or owner. |
+| `__iter__()` | Allow looping through assets. |
 
 ---
 
-## ## Module: `asset_utils`
+# 📄 Module 2: `asset_utils.py` — Summary, Search, Visualization
 
-### `summarize_total_value(registry)`
-Return a table summarizing:
-- Total value  
-- Count  
-- Average value  
-grouped by Type and Owner.
+### Function: `summarize_total_value(registry)`
+Aggregate total, average, and count grouped by Type/Owner.
 
-### `search_assets(registry, keyword)`
-Search by ID, name, type, or owner; return DataFrame.
+### Function: `search_assets(registry, keyword)`
+Search based on ID, name, type, or owner.
 
-### `get_visualization_data(registry, group_by='Type')`
-Produce:
-- Summary table  
-- Pie chart  
-- Grouped DataFrame  
+### Function: `get_visualization_data(registry, group_by='Type')`
+Generate a summary table + pie chart visualization.
 
 ---
 
