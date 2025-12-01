@@ -157,45 +157,63 @@ Produce:
 
 # 🏠 4. Main Controller: `BudgetSystem`
 
-This high-level class connects all three sub-packages.  
-It manages members, funds, and assets together inside one object.
+The `BudgetSystem` class integrates all three sub-packages (member, budgetfund, property).  
+It serves as the central interface that manages **members**, **funds**, and **assets** together.
 
-## ## Key Methods
+---
 
-### Members
-- `add_member(member)`
-- `remove_member(ID)`
-- `list_member()`
-- `get_member(ID)`
-- `upgrade_member(ID)`  
-- `__str__()`
+## 👥 Member Management
 
-### Funds
-- `add_fund(amount, description, date)`
-- `sub_fund(amount, description, date)`
-- `validate_fund(amount)`
-- `summarize_month(start, end)`
-- `filter_fund_status(status)`
-- `search_fund_log(keyword)`
-- `get_df(start, end)`
-- `print_fund_log(start, end)`
+| Method | Description |
+|--------|-------------|
+| `add_member(member)` | Add a new member (guardian or dependant). |
+| `remove_member(ID)` | Remove a member by unique ID. |
+| `list_member()` | Print all members in the system. |
+| `get_member(ID)` | Retrieve a member object by ID. |
+| `upgrade_member(ID)` | Convert a dependant into a guardian (promote role). |
+| `__str__()` | Return formatted summary of the BudgetSystem state. |
 
-### Property
-- `add_asset_for_member(id, name, type, value, date)`
-- `list_assets()`
-- `delete_asset(asset_id)`
-- `update_asset_value(asset_id, new_value)`
-- `summarize_assets()`
-- `search_assets(keyword)`
-- `get_asset_visualization_data(group_by)`
+---
 
-### CLI Menu
-- `main_menu(system)`
-- `member_editor(system)`
-- `fund_editor(system)`
-- `property_editor(system)`
-- `log_viewer(system)`
-- `initialization(system=None)`
+## 💰 Fund Management
+
+| Method | Description |
+|--------|-------------|
+| `add_fund(amount, description, date)` | Add income to the budget fund. |
+| `sub_fund(amount, description, date)` | Subtract expenses; logs success/failed. |
+| `validate_fund(amount)` | Check whether fund has enough balance. |
+| `summarize_month(start, end)` | Generate monthly summary bar/pie charts. |
+| `filter_fund_status(status)` | Filter logs by succeeded/failed status. |
+| `search_fund_log(keyword)` | Search transaction logs by description keyword. |
+| `get_df(start, end)` | Return fund logs as a DataFrame. |
+| `print_fund_log(start, end)` | Pretty-print log using styled DataFrame. |
+
+---
+
+## 🏡 Property / Asset Management
+
+| Method | Description |
+|--------|-------------|
+| `add_asset_for_member(id, name, type, value, date)` | Add an asset linked to a specific member. |
+| `list_assets()` | Display all assets in table format. |
+| `delete_asset(asset_id)` | Remove asset by ID. |
+| `update_asset_value(asset_id, new_value)` | Change asset value with timestamp update. |
+| `summarize_assets()` | Table summary grouped by type/owner. |
+| `search_assets(keyword)` | Search assets by ID/name/type/owner. |
+| `get_asset_visualization_data(group_by)` | Generate table + pie chart visualization. |
+
+---
+
+## 🖥️ CLI Interactive Menu System
+
+| Method | Description |
+|--------|-------------|
+| `main_menu(system)` | Root menu for all operations. |
+| `member_editor(system)` | Menu interface for adding/editing/deleting members. |
+| `fund_editor(system)` | Menu for income/expense operations. |
+| `property_editor(system)` | Menu for asset creation & modification. |
+| `log_viewer(system)` | Menu for viewing/searching/filtering fund logs. |
+| `initialization(system=None)` | Initialize a new system or re-enter menu. |
 
 ---
 
