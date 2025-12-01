@@ -46,3 +46,5 @@ Adjust budget_system.budget_system里面 add_member function，防止记录存�
 11/29 下午两点
 
 12/01 周二递交ddl，bug基本修完了，这个文件递交前记得删掉
+
+12/01 check  rachel overall testing of modules
