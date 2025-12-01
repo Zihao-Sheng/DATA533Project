@@ -58,7 +58,7 @@ class BudgetSystem:
             job = input('Please enter the job title for the member: ')
             income = float(input('Please enter the income for the member: '))
             self.remove_member(ID)
-            new_person = guardian(person.name, person.ID, person.DOB, job, income)
+            new_person = guardian(person.name, person.ID, person.DOB, income, job)
             self.add_member(new_person)
             return True
 
@@ -244,7 +244,7 @@ def member_editor(system):
             if mtype == "guardian":
                 job = input('Job Title: ')
                 income = float(input('Income: '))
-                new_member = guardian(name, ID, dob, job, income)
+                new_member = guardian(name, ID, dob, income, job)
             else:
                 new_member = dependant(name, ID, dob)
 
@@ -391,8 +391,8 @@ def log_viewer(system):
             time.sleep(0.05)
             print("Please enter the summary period.")
             print("For monthly summary, you can use year-month format like 2025-05.")
-            start = input("Start (e.g., 2025-05 or 2025-05-01): ").strip()
-            end   = input("End   (e.g., 2025-05 or 2025-05-31): ").strip()
+            start = input("Start (e.g., 2025-05): ").strip()
+            end   = input("End   (e.g., 2025-05): ").strip()
             system.summarize_month(start, end)
             input("\nPress Enter to return...")
 

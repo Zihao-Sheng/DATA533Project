@@ -1,6 +1,7 @@
 from .budgetfund import budgetfund
 import matplotlib.pyplot as plt
 import pandas as pd
+from IPython.display import display
 
 def print_log(budgetfund,start,end):
     df = budgetfund.get_df(start,end)

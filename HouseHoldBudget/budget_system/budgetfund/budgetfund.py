@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 class budgetfund: #this is the class for the whole budget of the family
     log_title=['action','amount','description','balance','status','date']
