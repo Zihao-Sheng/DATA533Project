@@ -36,6 +36,7 @@ Adjust budget_system.budget_system里面 add_member function，防止记录存�
 
 11/27 签到签到
 
+11/30 准备准备debug和交step2了
 
 11/26 上午11:32 check
 
