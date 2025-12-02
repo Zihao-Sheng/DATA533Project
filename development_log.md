@@ -52,3 +52,4 @@ Adjust budget_system.budget_system里面 add_member function，防止记录存�
 12/01 收到收到
 
 12/01 下午
+最后一次log更新，准备删了
