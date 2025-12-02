@@ -1,4 +1,13 @@
-# This code provided analysis, search, and visualization utilities for a PropertyRegistry: it summarizes total asset value, searchs assets by keyword, and aggregates asset value by type or owner to generate both tabular and pie-chart views.
+# This module provides utility functions for analyzing and visualizing data
+# stored in a PropertyRegistry. It includes:
+# - summarize_total_value(): computes total asset value and generates a grouped
+#   summary table by type and owner.
+# - search_assets(): performs keyword-based searching across asset fields such
+#   as ID, name, type, and owner.
+# - get_visualization_data(): prepares aggregated data and renders a table-plus-
+#   pie-chart visualization grouped by asset type or owner.
+# These helpers extend the registry with reporting, search, and plotting
+# capabilities for quick exploration and presentation.
 
 import pandas as pd
 from typing import Dict, Union
