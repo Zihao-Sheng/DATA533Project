@@ -1,3 +1,37 @@
+# -----------------------------------------------------------
+# Development Log – budgetfund Class
+#
+# The budgetfund class was designed to manage a household
+# budgeting system with clear data tracking and encapsulation.
+# 
+# The class begins with definitions of core financial fields:
+# - opening_balance: initial amount provided by user
+# - __balance: private variable ensuring protected updates
+# - __log: private transaction list storing all operations
+# A constant header (log_title) ensures consistent structure
+# across all logged records.
+#
+# Core functionality centers on safe updates to balance.
+# The validate() method prevents withdrawals larger than the
+# available balance. The add() and sub() methods append detailed
+# transaction records, including action type, amount, description,
+# resulting balance, status, and date. Automatic date stamping is
+# used if no date is provided.
+#
+# Reporting tools were implemented for analysis and visualization.
+# get_df() converts the raw log into a pandas DataFrame and adds
+# a year_month column, simplifying time-range filtering.
+#
+# summarize_month() computes monthly income, expenses, opening
+# balance, and closing balance by selecting the relevant period.
+# The method provides two visual charts: a bar plot summarizing
+# monthly financial flow and a pie chart breaking down expenses
+# by category.
+#
+# Overall, the class design emphasizes usability, data integrity,
+# and extensibility while keeping the interface intuitive.
+# -----------------------------------------------------------
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
