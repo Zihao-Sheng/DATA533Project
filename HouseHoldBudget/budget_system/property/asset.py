@@ -1,4 +1,39 @@
-# This code defines a simple asset tracking system where each asset gets a unique ID, is validated and timestamped, and all assets can be storeed, updated, deleted, filtered, and exported as nicely formatted pandas DataFrames.
+# =============================================================================
+# Property Management Module
+#
+# This module implements a lightweight property and asset management system,
+# built around two core components: `Asset` and `PropertyRegistry`.
+#
+# The `Asset` class represents an individual asset such as real estate,
+# vehicles, investments, or other forms of property. Key features include:
+# - Automatic unique ID generation using an incremental counter combined with
+#   a type-specific suffix (e.g., A001R for a real estate asset).
+# - Core attributes: name, type, owner, current value, date acquired, and the
+#   timestamp of the last update.
+# - Input validation preventing invalid asset types and negative monetary
+#   values.
+# - A property-based setter for current value that automatically updates the
+#   `last_updated` timestamp whenever the asset value changes.
+# - A `to_dict()` helper method that exports the asset data in dictionary form,
+#   making it suitable for serialization, logging, or conversion to a pandas
+#   DataFrame.
+#
+# The `PropertyRegistry` class manages multiple `Asset` instances in memory:
+# - Supports adding and deleting assets, including duplicate-ID warnings.
+# - Enables updating the value of existing assets via their unique ID.
+# - Provides internal helper methods for retrieving assets or their index in
+#   the registry.
+# - Exports all assets to a pandas DataFrame, or returns filtered subsets based
+#   on asset type and/or owner.
+# - Includes a private `_format_dataframe()` utility that ensures the Value
+#   column is stored numerically and adds a human-friendly formatted
+#   `Value_Display` column (e.g., "$10,000.00").
+#
+# This module serves as a clean and extensible foundation for small data
+# projects, homework assignments, or prototype applications involving asset
+# tracking. It can be enhanced with persistence, authentication, or expanded
+# business rules in more advanced use cases.
+# =============================================================================
 
 from datetime import datetime
 import pandas as pd
