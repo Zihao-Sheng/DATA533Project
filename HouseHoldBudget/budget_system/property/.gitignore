@@ -1,3 +1,5 @@
+# This .gitignore file ensures that only meaningful source code and important project files are tracked, while ignoring caches, environments, build outputs, editor settings, and temporary system files.
+
 # ===== Python cache =====
 __pycache__/
 *.py[cod]
