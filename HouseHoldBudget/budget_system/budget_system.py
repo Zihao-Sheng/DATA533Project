@@ -28,6 +28,7 @@
 # Overall, the focus was on keeping the code modular and easy to
 # extend later while still giving a complete working system.
 # -----------------------------------------------------------
+# This module provides the core family budget system with member management, fund tracking, asset handling, and an interactive console-based interface.
 
 from .budgetfund import budgetfund, fund_utils
 from .member.member_type import guardian, dependant, member_edit
