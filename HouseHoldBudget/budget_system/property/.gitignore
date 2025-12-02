@@ -1,4 +1,19 @@
-# This .gitignore file ensures that only meaningful source code and important project files are tracked, while ignoring caches, environments, build outputs, editor settings, and temporary system files.
+# This .gitignore file is designed to maintain a clean and professional repository
+# structure for a Python-based development workflow that includes Jupyter notebooks,
+# data science experiments, and macOS environments. It excludes automatically
+# generated files such as Python bytecode caches, notebook checkpoint directories,
+# and macOS system artifacts that do not belong in version control. 
+#
+# In addition, it ignores build outputs, package distribution folders, virtual
+# environment directories, and IDE/editor-specific settings (e.g., VS Code and
+# IntelliJ). These files are machine-specific and would otherwise clutter commit
+# history or cause inconsistencies across different development environments.
+#
+# Temporary logs and miscellaneous runtime files are also excluded to prevent
+# accidental commits of transient or debug-related artifacts. By filtering out
+# these non-essential files, the repository remains lightweight, reproducible, and
+# collaborative-friendly, ensuring that only meaningful source code and relevant
+# project assets are tracked in Git.
 
 # ===== Python cache =====
 __pycache__/
