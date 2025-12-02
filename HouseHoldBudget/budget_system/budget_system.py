@@ -1,3 +1,34 @@
+# -----------------------------------------------------------
+# Development Log – BudgetSystem
+#
+# The goal of this module was to combine three parts of the
+# project into one coherent system: fund tracking, member
+# management, and asset/property management. The design started
+# with the idea that the BudgetSystem should simply act as a
+# coordinator, while each sub-module (budgetfund, member classes,
+# and property registry) handles its own logic.
+#
+# Member operations were built first — adding, removing, editing,
+# and upgrading dependants to guardians. A few safeguards were
+# added, such as preventing duplicate IDs. After that, the fund
+# section was connected by wrapping the existing budgetfund class,
+# allowing the system to record deposits, expenses, and generate
+# summaries in a consistent way.
+#
+# The property manager came last. Assets can now be created,
+# updated, reassigned to different owners, or deleted. A small
+# reporting tool was added to summarize total asset value and
+# provide grouped data for visualization.
+#
+# The final piece was the CLI interface. Menus were organized so
+# users can move naturally between members, funds, logs, and
+# assets. Some helper functions (screen clearing, owner pickers,
+# type selectors) were added to make the experience smoother.
+#
+# Overall, the focus was on keeping the code modular and easy to
+# extend later while still giving a complete working system.
+# -----------------------------------------------------------
+
 from .budgetfund import budgetfund, fund_utils
 from .member.member_type import guardian, dependant, member_edit
 from .property.asset import Asset, PropertyRegistry
