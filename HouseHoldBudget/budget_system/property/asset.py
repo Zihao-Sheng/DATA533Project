@@ -1,3 +1,5 @@
+# This code defines a simple asset tracking system where each asset gets a unique ID, is validated and timestamped, and all assets can be storeed, updated, deleted, filtered, and exported as nicely formatted pandas DataFrames.
+
 from datetime import datetime
 import pandas as pd
 from typing import List, Dict, Any, Optional
