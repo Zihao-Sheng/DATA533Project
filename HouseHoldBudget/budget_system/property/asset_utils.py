@@ -1,3 +1,5 @@
+# This code provided analysis, search, and visualization utilities for a PropertyRegistry: it summarizes total asset value, searchs assets by keyword, and aggregates asset value by type or owner to generate both tabular and pie-chart views.
+
 import pandas as pd
 from typing import Dict, Union
 from .asset import PropertyRegistry
