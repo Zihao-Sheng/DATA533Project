@@ -1,3 +1,35 @@
+"""
+===========================================================
+ Member Types and Member Editor
+-----------------------------------------------------------
+ This module defines specialized member types for the 
+ household budgeting system, including Dependants and 
+ Guardians. Both inherit from the base `member` class.
+
+ Classes:
+     dependant:
+         Represents a dependent member with basic identifying 
+         information inherited from `member`.
+
+     guardian:
+         Represents a guardian with additional attributes 
+         including income and job title. Includes methods to 
+         update job and income.
+
+ Functions:
+     member_edit(member_obj):
+         Provides an interactive text-based editor for 
+         modifying member attributes. The available editing 
+         options depend on whether the member is a dependant 
+         or a guardian.
+
+ Notes:
+     - This module assumes the presence of a base class 
+       `member` in the same package.
+     - Editing operations are performed via terminal input.
+===========================================================
+"""
+
 from .member import member
 
 
