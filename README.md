@@ -1,3 +1,5 @@
+#Notice: This repo is only for submission of Step 1 Project Work, please proceed to Step 2 and Step 3 repo: budget_fund for further work and continuous repo commit logs.
+
 # 🧾 1. Subpackage: `member`
 
 This subpackage defines household members using inheritance.  
